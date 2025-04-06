@@ -1,20 +1,20 @@
 FROM node:18-slim
 
-# Create app directory
+# Set the working directory
 WORKDIR /usr/src/app
 
 # Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
 COPY package*.json ./
-
-# Install dependencies
 RUN npm ci --only=production
 
-# Bundle app source
+# Install pm2 globally
+RUN npm install -g pm2
+
+# Copy the rest of the application code
 COPY . .
 
-# Expose port
+# Expose the port the app runs on
 EXPOSE 5000
 
-# Start the application
-CMD [ "node", "server.js" ]
+# Start both the dev server and worker using pm2
+CMD ["pm2-runtime", "start", "npm", "--", "run", "dev:all"]
