@@ -15,12 +15,34 @@ dotenv.config();
 const app = express();
 
 // Apply middleware
-app.use(helmet());
-app.use(cors());
+app.use(helmet({
+  crossOriginResourcePolicy: false // Allow cross-origin resource sharing
+}));
+
+// Enhanced CORS configuration with your specific domains
+app.use(cors({
+  origin: [
+    'https://ut.simpsonelectrics.com',
+    'https://www.grimpsy.shop',
+    'https://grimpsy.shop',
+    'http://localhost:3000', // For local development
+    '*' // As a fallback for development
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true, // Allow cookies and credentials
+  maxAge: 86400 // Cache preflight requests for 24 hours
+}));
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(morgan('combined'));
 app.use(globalLimiter);
+
+// Add a root route for better health checks
+app.get('/', (req, res) => {
+  res.status(200).send('Email Service API is running');
+});
 
 // Routes
 app.use('/api/email', emailRoutes);
