@@ -3,9 +3,11 @@ FROM node:18-slim
 # Set the working directory
 WORKDIR /usr/src/app
 
-# Install app dependencies
+# Copy package.json and package-lock.json
 COPY package*.json ./
-RUN npm ci --only=production
+
+# Install all dependencies, including development dependencies
+RUN npm install --production=false
 
 # Install pm2 globally
 RUN npm install -g pm2
