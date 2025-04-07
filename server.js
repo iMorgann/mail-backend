@@ -14,9 +14,12 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy - Add this line before other middleware
+app.set('trust proxy', 1);
+
 // Apply middleware
 app.use(helmet({
-  crossOriginResourcePolicy: false // Allow cross-origin resource sharing
+  crossOriginResourcePolicy: false
 }));
 
 // Enhanced CORS configuration with your specific domains
@@ -25,13 +28,15 @@ app.use(cors({
     'https://ut.simpsonelectrics.com',
     'https://www.grimpsy.shop',
     'https://grimpsy.shop',
-    'http://localhost:3000', // For local development
-    '*' // As a fallback for development
+    'http://grimpsy.store',
+    'https://grimpsy.store',
+    'http://localhost:3000',
+    '*'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  credentials: true, // Allow cookies and credentials
-  maxAge: 86400 // Cache preflight requests for 24 hours
+  credentials: true,
+  maxAge: 86400
 }));
 
 app.use(express.json({ limit: '10mb' }));
