@@ -22,17 +22,12 @@ app.use(helmet({
   crossOriginResourcePolicy: false
 }));
 
-// Enhanced CORS configuration with your specific domains
+// Simplified CORS configuration to allow all origins
 app.use(cors({
-  origin: [
-    'https://ut.simpsonelectrics.com',
-    'https://www.grimpsy.shop',
-    'https://grimpsy.shop',
-    'http://grimpsy.store',
-    'https://grimpsy.store',
-    'http://localhost:3000',
-    '*'
-  ],
+  origin: function(origin, callback) {
+    // Allow all origins by always returning true
+    callback(null, true);
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true,
